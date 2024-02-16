@@ -41,12 +41,28 @@ class Rana {
 private:
 	int x;
 	int y;
+	int puntaje;
 	
 public:
-	Rana() {
+	Rana(): puntaje (0) {	
+		reiniciarPosicion();	
+//		x = 12;  // Posición inicial en el eje X
+//		y = 11; // Posición inicial en el eje Y
+	}	
+	
+	void reiniciarPosicion() {
 		x = 12;  // Posición inicial en el eje X
-		y = 11; // Posición inicial en el eje Y
+		y = 11;  // Posición inicial en el eje Y
 	}
+	
+	void aumentarPuntaje(int puntos) {
+		puntaje += puntos;
+	}
+	
+	int getPuntaje() const {
+		return puntaje;
+	}
+	
 	
 	int getX() {
 		return x;
@@ -151,34 +167,37 @@ int main(int argc, char *argv[]) {
 		for (Obstaculo &obstaculo : obstaculos) {
 			obstaculo.mover();
 			obstaculo.dibujar();
-		
-		// Lógica de colisiones
-		if (rana.colision(obstaculo)) {
-			clrscr();
-			cout << "¡Colisión! Juego terminado." << endl;
-			return 0;
+			
+			// Lógica de colisiones
+			if (rana.colision(obstaculo)) {
+				clrscr();
+				cout << "¡Colisión! Juego terminado." << endl;
+				return 0;
 			}
 		}
 		
 		// Verificar si la rana ha llegado a la posición de victoria
 		if (rana.getY() == 1) {
+			rana.reiniciarPosicion();  // Reiniciar posición de la rana
+			rana.aumentarPuntaje(50); // Aumentar puntaje al ganar
 			clrscr();
-			cout << "¡Has ganado!"<<endl;
-			return 0;
+			cout << "¡Has ganado! Puntaje: " << rana.getPuntaje() << endl;
+			esperar(2000); 
 		}
 		
 		// Imprimir indicaciones de control en la parte inferior
 		gotoxy(1, 13);
 		cout << "Controles: (tu eres 'R')" << endl
 			<< "Flecha arriba (para desplazarse hacia arriba)" << endl
-			<< "Flecha abajo (para desplazarse hacia abajo)";
+			<< "Flecha abajo (para desplazarse hacia abajo)"<< endl
+			<< " " << endl	
+			<< "PUNTAJE: " << rana.getPuntaje();
 		
 		rana.manejarEntrada();
-	
+		
 		// Espera corta para controlar la velocidad de actualización de la pantalla
 		esperar(100);
 	}
 	
 	return 0;
 }
-
